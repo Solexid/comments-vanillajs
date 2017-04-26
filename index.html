@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+</head>
+ <table id="Table" class="table" style="width:100%;overflow-y: scroll;background:#DDD">
+                            <thead style="background:#DDD">
+                                <tr><th style="width:2%;" data-field="identify"><div class="th-inner">Avatar</div></th>
+                                <th style="width:40%;" data-field="FullName"><div class="th-inner">Nick</div></th>
+                                <th style="" data-field="Date"><div class="th-inner">Date</div></th>
+                                <th style="" data-field="Data"><div class="th-inner">Comment</div> </th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody" style="background:#EEE"></tbody>
+                        </table>
+
+
+
+
+<script type="text/javascript">
+
+
+function getXmlHttp(){
+	try {
+		return new ActiveXObject("Msxml2.XMLHTTP");
+	} catch (e) {
+		try {
+			return new ActiveXObject("Microsoft.XMLHTTP");
+		} catch (ee) {
+		}
+	}
+	if (typeof XMLHttpRequest!='undefined') {
+		return new XMLHttpRequest();
+	}
+}
+
+function getUrl(url, cb) { 
+	var xmlhttp = getXmlHttp();
+	xmlhttp.open("GET", url+'?r='+Math.random());
+	xmlhttp.onreadystatechange = function() {
+		if (xmlhttp.readyState == 4) {
+			cb(
+			xmlhttp.responseText
+			);
+		}
+	}
+	xmlhttp.send(null);
+}
+
+getUrl("https://api.github.com/repos/Solexid/comments-vanillajs/issues/1/comments", function (contents) {
+  
+
+        var arr = JSON.parse(contents);
+        var data="";
+        arr.forEach(function (comment, i, arr) {
+   				var date = new Date(comment.created_at);
+              	var avatar= "<img src='" + comment.user.avatar_url + "' width='24px'>";
+                var login= "<b><a href='" + comment.user.html_url + "'>" + comment.user.login + "</a></b>";              
+                var datestring = "<em>" + date.toUTCString() + "</em>";
+                var commentbody= comment.body;
+            data += ('<tr style="height:80px;font-size:25px" ><td >' + avatar + '</td><td  >' + login + '</td><td >' + datestring+ '</td><td >' + commentbody + '</td></tr>');
+        });
+        document.getElementById("tbody").innerHTML = data;
+
+});
+
+</script>
+<html>
